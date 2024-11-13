@@ -12,11 +12,11 @@ enable_ocr = False
 enable_llm = True
 llm_model = "llama3.2-vision"
 llm_model = "minicpm-v"
-llm_model = "moondream"
 llm_model = "benzie/llava-phi-3"
+llm_model = "moondream"
 
-llm_prompt_top = "Extract and correct french text from this image."
-llm_prompt_dest = "Extract and correct french text from this image."
+llm_prompt_top = "Extract and correct the french text from this image. Do not add any additional text. Just output the text you manage to read."
+llm_prompt_dest = "Extract and correct the french text from this image. Do not add any additional text. Just output the text you manage to read."
 
 def convert_uuid_to_url(uuid_string):
     base_url = "https://panoramax.openstreetmap.fr/images"

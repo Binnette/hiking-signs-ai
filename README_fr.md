@@ -82,13 +82,79 @@ J'ai annoté à la fois mes photos d'entraînement et de test et exporté mon pr
 
 ### Préparez-vous à entraîner un modèle 🖥️
 
-Ensuite, j'ai écrit un script Python pour entraîner un modèle. J'ai utilisé [PyTorch](https://pytorch.org/) et le framework open-source [Detectron2](https://github.com/facebookresearch/detectron2) pour la détection d'objets dans mes photos.
+Ensuite, j'ai écrit un script Python pour entraîner un modèle. J'ai utilisé [PyTorch](https://pytorch.org/) et le framework open-source [Detectron2](https://github.com/facebookresearch/detectron2) pour la détection d'objets dans mes images.
 
-D'abord, j'ai entraîné mon modèle sur mon ordinateur portable 💻, qui est vieux et n'a pas de bon GPU. L'entraînement a duré 2,5 heures pour seulement 500 itérations. Ensuite, j'ai utilisé ce modèle sur mes photos, et le résultat était terrible. Mon modèle détectait à peine les différentes parties du poteau de signalisation et les identifiait mal.
+Tout d'abord, j'ai entraîné mon modèle sur mon ordinateur portable 💻, qui est ancien et n'a pas un bon GPU. L'entraînement a duré 2,5 heures pour seulement 500 itérations. Ensuite, j'ai utilisé ce modèle sur mes images, et le résultat était terrible. Mon modèle détectait à peine les différentes parties du poteau indicateur et les identifiait incorrectement.
 
-J'ai donc utilisé un ordinateur de bureau avec un GPU NVIDIA 🎮. Comme ce n'était pas mon
+Alors, j'ai utilisé un ordinateur de bureau avec un GPU NVIDIA 🎮. Comme ce n'était pas mon ordinateur, j'ai dû utiliser WSL car `Detectron2` est compatible uniquement avec les systèmes Linux 🐧.
 
-I apologize for the interruption. Here’s the rest of your text translated into French:
+1. Installer [WSL](https://github.com/microsoft/WSL)
+2. Installer Ubuntu sur WSL 2+
+3. Installer Python, les pilotes NVIDIA et d'autres paquets :
+
+```bash
+apt install python3 python3-dev git ubuntu-drivers nvidia-smi
+ubuntu-drivers list --gpgpu
+# J'ai essayé le pilote 'open' mais il n'a pas fonctionné
+ubuntu-drivers install nvidia:550
+# Instructions provenant de https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0&target_type=deb_network
+wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-keyring_1.1-1_all.deb
+dpkg -i cuda-keyring_1.1-1_all.deb
+apt-get update
+apt-get -y install cuda-toolkit-12-6
+nvidia-smi
+```
+
+4. La dernière commande devrait afficher des informations sur votre GPU et la version CUDA.
+
+Maintenant, vous pouvez essayer ce script pour voir si PyTorch peut utiliser votre GPU NVIDIA :
+
+```bash
+# Activer l'environnement virtuel Python
+source venv/bin/activate
+pip wheel
+pip install torch torchvision
+python 11-testGpu.py
+```
+
+Ensuite, j'ai finalement installé Detectron2 :
+
+```bash
+git clone https://github.com/facebookresearch/detectron2.git
+pip install -e detectron2
+```
+
+### Entraîner un modèle 🏋️‍♂️
+
+```bash
+python 20-trainObjectDetectionModel.py
+```
+
+Avec 500 itérations, l'entraînement a duré 5 minutes sur cet ordinateur au lieu de 2,5 heures sur mon ordinateur portable. Mais le modèle était toujours terrible. Alors, j'ai augmenté le nombre d'itérations à plus de 5000, l'entraînement a duré environ 2 heures, et le modèle était "PARFAIT" 🥳. J'étais très satisfait du résultat.
+
+### Tester mon modèle 🔬
+
+J'ai donc testé mon modèle en l'utilisant pour annoter mes images :
+
+```bash
+python 21-testObjectDetectionModel.py
+```
+
+Voici une visualisation des objets détectés par mon modèle :
+
+| Détection 🔍 | Détection 🔍 |
+|--------------|--------------|
+| ![Annoté par le modèle](assets/7-object-detection.jpg) | ![Annoté par le modèle](assets/8-object-detection.jpg) |
+
+Comme vous pouvez le voir, mon modèle est assez confiant dans la reconnaissance des panneaux supérieurs et des panneaux de destination des poteaux indicateurs.
+
+### Utiliser le modèle pour recadrer les images ✂️
+
+Maintenant que le modèle est entraîné, j'ai écrit un autre script pour recadrer les images selon les zones des panneaux supérieurs et des destinations données. Il produit des images recadrées dans les dossiers `crop/top` et `crop/destination`.
+
+```bash
+python 22-cropUsingObjectDetectionModel.py
+```
 
 ### Créez un défi MapRoulette 🌐
 

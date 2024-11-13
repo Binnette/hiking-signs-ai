@@ -15,28 +15,28 @@ from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 classes = ["top", "destination", "poster", "bike_sign", "street_sign", "panel"]
 
 # Define paths
-train_set = "./coco-train-hiking-sign"
+train_set = "./coco-train"
 train_annotations = os.path.join(train_set, "result.json")
 
-test_set = "./coco-test-hiking-sign"
+test_set = "./coco-test"
 test_annotations = os.path.join(test_set, "result.json")
 
 # Register the dataset
-def register_hiking_signs_dataset():
-    register_coco_instances("hiking_signs_train", {}, train_annotations, train_set)
-    register_coco_instances("hiking_signs_test", {}, test_annotations, test_set)
+def register_dataset():
+    register_coco_instances("coco_train", {}, train_annotations, train_set)
+    register_coco_instances("coco_test", {}, test_annotations, test_set)
 
     # Set metadata
-    MetadataCatalog.get("hiking_signs_train").set(
+    MetadataCatalog.get("coco_train").set(
         thing_classes=classes,
         evaluator_type='coco',
     )
-    MetadataCatalog.get("hiking_signs_test").set(
+    MetadataCatalog.get("coco_test").set(
         thing_classes=classes,
         evaluator_type='coco',
     )
 
-register_hiking_signs_dataset()
+register_dataset()
 
 # Configuration
 cfg = get_cfg()
@@ -49,8 +49,8 @@ cfg.MODEL.ROI_HEADS.NUM_CLASSES = len(classes)
 cfg.MODEL.DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 cfg.MODEL.MASK_ON = True
 
-cfg.DATASETS.TRAIN = ("hiking_signs_train",)
-cfg.DATASETS.TEST = ("hiking_signs_test",)
+cfg.DATASETS.TRAIN = ("coco_train",)
+cfg.DATASETS.TEST = ("coco_test",)
 
 cfg.SOLVER.IMS_PER_BATCH = 2
 cfg.SOLVER.BASE_LR = 0.02
@@ -75,6 +75,6 @@ trainer.resume_or_load(resume=False)
 trainer.train()
 
 # Evaluate the model
-evaluator = COCOEvaluator("hiking_signs_test", cfg, False, output_dir="./output-od/")
-val_loader = build_detection_test_loader(cfg, "hiking_signs_test")
+evaluator = COCOEvaluator("coco_test", cfg, False, output_dir="./output-od/")
+val_loader = build_detection_test_loader(cfg, "coco_test")
 print(inference_on_dataset(trainer.model, val_loader, evaluator))
