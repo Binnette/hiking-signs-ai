@@ -112,7 +112,7 @@ Maintenant, vous pouvez essayer ce script pour voir si PyTorch peut utiliser vot
 ```bash
 # Activer l'environnement virtuel Python
 source venv/bin/activate
-pip wheel
+pip install wheel
 pip install torch torchvision
 python 11-testGpu.py
 ```

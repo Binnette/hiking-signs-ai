@@ -112,7 +112,7 @@ Now you can try this script to see if PyTorch can use your NVIDIA GPU:
 ```bash
 # Activate python venv
 source venv/bin/activate
-pip wheel
+pip install wheel
 pip install torch torchvision
 python 11-testGpu.py
 ```
