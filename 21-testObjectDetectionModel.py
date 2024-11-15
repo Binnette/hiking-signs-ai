@@ -8,7 +8,7 @@ from detectron2.data.datasets import register_coco_instances
 from detectron2.engine import DefaultPredictor
 from detectron2.utils.visualizer import Visualizer, ColorMode
 
-classes = ["top", "destination", "poster", "bike_sign", "street_sign", "panel"]
+classes = ["top", "destination", "poster", "bike_sign", "street_sign", "panel", "compass"]
 
 # Définir les chemins
 train_set = "./coco-train"

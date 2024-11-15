@@ -12,7 +12,7 @@ from detectron2.data.datasets import register_coco_instances
 from detectron2.engine import DefaultTrainer
 from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 
-classes = ["top", "destination", "poster", "bike_sign", "street_sign", "panel"]
+classes = ["top", "destination", "poster", "bike_sign", "street_sign", "panel", "compass"]
 
 # Define paths
 train_set = "./coco-train"
